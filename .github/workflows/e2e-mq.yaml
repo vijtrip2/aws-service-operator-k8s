@@ -3,7 +3,7 @@ on: [push]
 jobs:
   test-mq-controller:
     name: test mq controller
-    runs-on: [self-hosted, ack-mq]
+    runs-on: [self-hosted, aws-controllers-k8s]
     steps:
       - name: Set up Go 1.15
         uses: actions/setup-go@v2
