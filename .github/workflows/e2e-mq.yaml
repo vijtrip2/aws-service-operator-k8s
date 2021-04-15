@@ -1,0 +1,41 @@
+name: e2e-test-mq
+on:
+  # Allow manual trigger of e2e tests
+  workflow_dispatch:
+
+jobs:
+  test-mq-controller:
+    name: test mq controller
+    runs-on: [self-hosted, ack-mq]
+    steps:
+      - name: Set up Go 1.15
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.15
+        id: go
+      - name: checkout community code
+        uses: actions/checkout@v2
+        with:
+          path: aws-controllers-k8s/community
+      - name: checkout code-generator code
+        uses: actions/checkout@v2
+        with:
+          repository: aws-controllers-k8s/code-generator
+          path: aws-controllers-k8s/code-generator
+      - name: checkout mq-controller code
+        uses: actions/checkout@v2
+        with:
+          repository: aws-controllers-k8s/mq-controller
+          path: aws-controllers-k8s/mq-controller
+      - name: build ack-generate
+        run: make build-ack-generate
+        working-directory: ./aws-controllers-k8s/community
+      - name: execute mq e2e tests
+        run: |
+          export AWS_PROFILE=default
+          export AWS_REGION=$(aws configure get region --profile default)
+          export AWS_ROLE_ARN=$(aws ssm get-parameter --name ACK_ROLE_ARN | jq -r '.Parameter.Value')
+          ./scripts/kind-build-test.sh $SERVICE
+        working-directory: ./aws-controllers-k8s/community
+        env:
+          SERVICE: mq
