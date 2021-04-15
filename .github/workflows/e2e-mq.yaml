@@ -19,6 +19,11 @@ jobs:
         with:
           repository: aws-controllers-k8s/code-generator
           path: aws-controllers-k8s/code-generator
+      - name: checkout test-infra
+        uses: actions/checkout@v2
+        with:
+          repository: aws-controllers-k8s/test-infra
+          path: aws-controllers-k8s/test-infra
       - name: checkout mq-controller code
         uses: actions/checkout@v2
         with:
