@@ -1,8 +1,5 @@
 name: e2e-test-mq
-on:
-  # Allow manual trigger of e2e tests
-  workflow_dispatch:
-
+on: [push]
 jobs:
   test-mq-controller:
     name: test mq controller
